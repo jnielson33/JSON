@@ -1,0 +1,66 @@
+/**
+ * Created by jarednielson on 1/25/16.
+ */
+
+
+import org.quickconnectfamily.json.*;
+import org.quickconnectfamily.json.tests.TestObject;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.lang.*;
+import java.util.*;
+
+
+//Creates a object called testThing that has three attributes. A string, an int, and a double
+//Serializable indicates that instances of the subclass can be converted into an array of bytes.
+public class testThing implements Serializable {
+
+
+    private String theString;
+    private int theInt;
+    private double theDouble;
+
+
+    //This is a java bean because it has no methods associated with it. All it does is simply store information.
+    //Java beans are great ways to store data.
+    //In this case when test thing is called it will store a String, a int, and a double
+    public testThing(String aString, int anInt, double aDouble) {
+
+        theString = aString;
+        theInt = anInt;
+        theDouble = aDouble;
+
+
+    }
+
+    public testThing(HashMap jsonMap) {
+    }
+
+
+    public String getTheString() {
+        return theString;
+    }
+
+    public void setTheString(String theString) {
+        this.theString = theString;
+    }
+
+    public int getTheInt() {
+        return theInt;
+    }
+
+    public void setTheInt(int theInt) {
+        this.theInt = theInt;
+    }
+
+    public double getTheDouble() {
+        return theDouble;
+    }
+
+    public void setTheDouble(double theDouble) {
+        this.theDouble = theDouble;
+    }
+}
