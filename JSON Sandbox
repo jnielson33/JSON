@@ -1,0 +1,219 @@
+/**
+ * Created by jarednielson on 1/25/16.
+ */
+
+import org.quickconnectfamily.json.*;
+import org.quickconnectfamily.json.tests.TestObject;
+
+import java.io.*;
+import java.lang.*;
+import java.util.*;
+
+public class jsonSand {
+
+    public static void main(String args[]) {
+
+        /*
+        ****************************
+        *     JSON HAPPY PATH
+        ****************************
+         */
+
+        //Creates a new instance of testThing called aTestObject and passes it 3 values
+        testThing aTestObject = new testThing("Hello", 7, 9.789);
+        testThing aTestObject2 = new testThing("Hi", 5, 9.2);
+
+
+        try {
+            //outputStreams and inputStreams are used to pull data into your application
+            //creates a output stream that writes data to a file with a specified name
+            FileOutputStream fileOut = new FileOutputStream("json test");
+            JSONOutputStream jsonOut = new JSONOutputStream(fileOut);
+
+            //Obtains input bytes from a file in the file system
+            FileInputStream fileIn = new FileInputStream("json test");
+            JSONInputStream jsonIn = new JSONInputStream(fileIn);
+
+
+            //This takes the values entered in aTestObject and makes it a string stored in a String called jsonString
+            String jsonString = JSONUtilities.stringify(aTestObject);
+            System.out.print("\nStringified aTestObject :" + jsonString + "\n\n");
+
+
+            //The result will print {"theString":"Json Sandbox","theInt":7,"theDouble":5.678}
+
+
+            //the writeObject() method writes the object so that the readObject() can restore it
+            //This will write the information passed to aTestObject to jsonOut
+            jsonOut.writeObject(aTestObject);
+            jsonOut.writeObject(aTestObject2);
+            jsonOut.close();
+
+
+
+            //This creates a HashMap called jsonMap and reads in the information stored in jsonOut
+            HashMap jsonMap = (HashMap) jsonIn.readObject();
+            System.out.print("jsonMap :" + jsonMap + "\n\n");
+
+
+
+            /*
+            Happy and Nasty Paths to test
+            what if your reading something thats not json (image file)?
+            */
+
+
+            /*NASTY PATH
+            Trying to use a null in the JSONInputStream
+
+            FileOutputStream fileOut2 = new FileOutputStream("file1");
+            JSONOutputStream jsonOut2 = new JSONOutputStream(fileOut2);
+
+
+            FileInputStream fileIn2 = new FileInputStream("file1");
+            JSONInputStream jsonIn2 = new JSONInputStream(null);
+
+
+            jsonOut2.writeObject(aTestObject);
+            jsonOut2.close();
+
+            HashMap jsonMap2 = (HashMap) jsonIn2.readObject();
+            System.out.print(jsonMap2);
+
+            This will display a NullPointerException
+
+            */
+
+
+            //NASTY PATH
+            //Trying to read a file that you don't have permissions to
+            /*
+            FileOutputStream fileOut2 = new FileOutputStream("file1");
+            JSONOutputStream jsonOut2 = new JSONOutputStream(fileOut);
+
+
+            FileInputStream fileIn2 = new FileInputStream("file1");
+            JSONInputStream jsonIn2 = new JSONInputStream(fileIn);
+
+
+            jsonOut2.writeObject(aTestObject);
+            jsonOut2.close();
+
+            HashMap jsonMap2 = (HashMap) jsonIn2.readObject();
+            System.out.print(jsonMap2);
+            */
+           //This will display an error that says - file1 (Permission denied)
+           //This is because I don't have permission to read file1
+
+
+
+
+            //NASTY PATH
+            //What happens if you don't have permission to write to a file
+            /*
+            FileOutputStream fileOut2 = new FileOutputStream("file1");
+            JSONOutputStream jsonOut2 = new JSONOutputStream(fileOut);
+
+
+            FileInputStream fileIn2 = new FileInputStream("file1");
+            JSONInputStream jsonIn2 = new JSONInputStream(fileIn);
+
+
+            jsonOut2.writeObject(aTestObject);
+            jsonOut2.close();
+
+            HashMap jsonMap2 = (HashMap) jsonIn2.readObject();
+            System.out.print(jsonMap2);
+            */
+            //This will display the same error that says - file1 (Permission denied)
+            //This is because you don't have permission to write to that file
+
+
+
+
+
+            //What happens when you parse a null?
+            String jsonString4 = (String) JSONUtilities.parse(null);
+            System.out.print("Parse a null: " + jsonString4 + "\n\n");
+
+
+
+
+
+            /*
+
+            NASTY PATH
+            What happens when you parse a empty string?
+
+            String jsonString6 = (String) JSONUtilities.parse("");
+            System.out.print("Parse a null: " + jsonString6 + "\n\n");
+
+            This will cause an error because you can't parse a string
+
+            */
+
+
+
+
+            /*
+             NASTY PATH
+             What happens when you parse "Hello world"?
+
+             String jsonString5 = (String) JSONUtilities.parse("Hello world");
+             System.out.print("Parse hello world" + jsonString5 + "\n\n");
+
+             This will display an error saying unexpected character (H) at position 0.
+             */
+
+
+
+
+            //What happens when you stringify an array list?
+            ArrayList movies = new ArrayList();
+            movies.add("The Martian");
+            movies.add("Harry Potter");
+            movies.add("Star Wars");
+
+            String jsonString5 = (String) JSONUtilities.stringify(movies);
+            System.out.print("Array list stringified: " + jsonString5 + "\n\n");
+
+
+
+
+
+            //Wat happens when you stringify "Hello Word"?
+            String jsonString7 =JSONUtilities.stringify("Hello World!");
+            System.out.print("Hello World stringified: " + jsonString7 + "\n\n");
+
+
+
+
+
+            //What happens when you stringify a null?
+            String jsonString2 =JSONUtilities.stringify(null);
+            System.out.print("null stringified: " + jsonString2 + "\n\n");
+
+
+
+
+
+            //What happens when you stringify an int?
+            String jsonString3 = JSONUtilities.stringify(15);
+            System.out.print("Int stringified: " + jsonString3 + "\n\n");
+
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+}
